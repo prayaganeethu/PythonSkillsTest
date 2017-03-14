@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>python online test</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/public/css/style.css"/>
+    <link href="//cdn.muicss.com/mui-0.9.10/css/mui.min.css" rel="stylesheet" type="text/css" />
+
+    <script src="//cdn.muicss.com/mui-0.9.10/js/mui.min.js"></script>
+    
+    <style type="text/css">
+        footer {
+  box-sizing: border-box;
+  position: fixed;
+  bottom:0%;
+  width:100%;
+  height: 80px;
+  background-color: #eee;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 35px;
+
+}
+    </style>
+</head>
+<body>
+<header class="mui-appbar mui--z1">
+  <!-- Appbar HTML goes here -->
+  <div class="mui-container">
+  <table width="100%">
+    <tr class="mui--appbar-height">
+      <td class="mui--text-title">PYTHON TEST</td>
+      <td align="right">
+        <ul class="mui-list--inline mui--text-body2">
+          <a href="/admin" style = "color:white;text-decoration: none"><li>Login</a></li>
+        </ul>
+      </td>
+    </tr>
+  </table>
+</div>
+</header>
+
+
+<div id = "main" class = "mui--text-left" style = "margin-left: 30px;">
+<div id="content-wrapper" class="mui--text-center">
+
+  <!-- Content HTML goes here -->
+  <div class="mui--appbar-height"></div>
+
+<div class="mui--text-display3">Welcome to Python test</div>
+<br>
+<br>
+<button class="mui-btn mui-btn--raised" onclick = "loadDoc()">Get started</button>
+</div>
+
+</div>
+
+
+<footer>
+  <div class="mui-container mui--text-center">
+     <a href="https://www.geekskool.com"></a>
+  </div>
+</footer>
+
+<script>
+var a = {};
+var que;
+var index = 0;
+function loadDoc() {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() {
+        if(this.readyState === 4 && this.status === 200) {
+            var res = this.responseText;
+            que = JSON.parse(res);
+            questions(que,0);
+          }
+    }
+    xmlHttp.open("GET","testPython",true);
+    xmlHttp.send();
+}
+
+function questions(questions, index) {
+    document.getElementById("main").innerHTML =
+    '<h2>' + questions[index]["Question"] + '</h2>' +
+    '<input type = "radio" name = "opt" value = "1">'+ " " + questions[index]["AnsOpt1"] + '<br/>' +
+    '<input type = "radio" name = "opt" value = "2">'+ " " + questions[index]["AnsOpt2"] + '<br/>' +
+    '<input type = "radio" name = "opt" value = "3">'+ " " +questions[index]["AnsOpt3"] + '<br/>' +
+    '<input type = "radio" name = "opt" value = "4">'+ " " + questions[index]["AnsOpt4"] + '<br/><br/>' +
+     '<input type = "submit" value = "submit" class="mui-btn mui-btn--raised" onclick = "userInput()">';
+
+}
+
+function userInput() {
+
+
+    //console.log(que[index]["QNo"])
+    a[que[index]["QNo"]] = document.querySelector('input[name="opt"]:checked').value;
+    //console.log(a);
+    //console.log(a);
+    index += 1;
+    if(index===que.length) {
+        //alert("u r done with the exam");
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST","testPython",true);
+        //xhr.setRequestHeader("Content-type", "application/json");
+        xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            console.log("the response i got is: "+ xhr.responseText);
+            var score = xhr.responseText;
+            //console.log(typeof xhr.responseText);
+            document.getElementById("main").innerHTML =
+
+            '<h2>' + "You have scored "+ score + '</h2>';
+            //var json = JSON.parse(xhr.responseText);
+            //console.log("the score is: "+ json);
+
+        }
+        }
+        //xhr.open("POST","testPython",true);
+        var data = JSON.stringify(a);
+        console.log("the data is: " + data);
+        xhr.send(data);
+        return;
+}
+
+
+    questions(que, index);
+}
+
+
+
+</script>
+
+</body>
+</html>

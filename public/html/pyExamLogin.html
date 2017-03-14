@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.muicss.com/mui-0.9.9/css/mui.min.css" rel="stylesheet" type="text/css" /> 
+    <!-- <link rel="stylesheet" href="pyExamLogin.css" type="text/css" /> -->
+    <link href="./css/pyExamLogin.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.muicss.com/mui-0.9.9/js/mui.min.js"></script>
+    <!-- HTTPS required. HTTP will give a 403 forbidden response -->
+    <script src="https://sdk.accountkit.com/en_US/sdk.js"></script>
+    <title>PYTHON PROFICIENCY TEST</title>
+</head>
+<body>
+	<header class="mui-appbar mui--z1">
+  	<!-- Appbar HTML goes here -->
+  	<div class="mui-container">
+  		<table width="100%">
+    		<tr class="mui--appbar-height">
+      			<td class="mui--text-title">GeekSkool</td>
+      			<td align="right">
+        			<ul class="mui-list--inline mui--text-body2">
+          				<!-- <li><a href="/admin">Admin Login</a></li> -->
+        			</ul>
+      			</td>
+    		</tr>
+  		</table>
+	</div>
+	</header>
+	<div id="content-wrapper" class="mui--text-center">
+  	<!-- Content HTML goes here -->
+  	<div class="mui--appbar-height"></div>
+	<br>
+	<br>
+  <br>
+  <br>
+	<div class="mui--text-display2">PYTHON PROFICIENCY TEST</div>
+	<br>
+	<br>
+
+  <input value="+91" id="country_code" />
+  <input placeholder="phone number" id="phone_number"/>
+  <button onclick="smsLogin();">Login via SMS</button>
+  <div>OR</div>
+  <input placeholder="email" id="email"/>
+  <button onclick="emailLogin();">Login via Email</button>
+
+
+  <form id="login_success" method="post" action="/login_success">
+  <input id="csrf" type="hidden" name="csrf" />
+  <input id="code" type="hidden" name="code" />
+  </form>
+
+  <script>
+  // initialize Account Kit with CSRF protection
+  AccountKit_OnInteractive = function(){
+    AccountKit.init(
+      {
+        appId:'611513125703977', 
+        state:'3490c986-be2b-451c-ae39-af7528fec4ac', 
+        version:'v1.0',
+        fbAppEventsEnabled:true
+      }
+    );
+  };
+
+  // login callback
+  function loginCallback(response) {
+    if (response.status === "PARTIALLY_AUTHENTICATED") {
+      // var code = response.code;
+      // var csrf = response.state;
+      // console.log(code)
+      // console.log(csrf)
+      // Send code to server to exchange for access token
+      document.getElementById("code").value = response.code;
+      document.getElementById("csrf").value = response.state;
+      document.getElementById("login_success").submit();
+    }
+    else if (response.status === "NOT_AUTHENTICATED") {
+      // handle authentication failure
+    }
+    else if (response.status === "BAD_PARAMS") {
+      // handle bad parameters
+    }
+  }
+
+  // phone form submission handler
+  function smsLogin() {
+    var countryCode = document.getElementById("country_code").value;
+    // console.log(countryCode);
+    var phoneNumber = document.getElementById("phone_number").value;
+    // console.log(phoneNumber);
+    AccountKit.login(
+      'PHONE', 
+      {countryCode: countryCode, phoneNumber: phoneNumber}, // will use default values if not specified
+      loginCallback
+    );
+  }
+
+  function emailLogin() {
+    var emailAddress = document.getElementById("email").value;
+    AccountKit.login(
+      'EMAIL',
+      {emailAddress: emailAddress},
+      loginCallback
+    );
+  }
+  </script>
+
+
+	</div>
+	<footer>
+  	<div class="mui-container mui--text-center">
+    Made at <a href="www.geekskool.com">GeekSkool</a>
+  	</div>
+	</footer>
+</body>
+</html>
