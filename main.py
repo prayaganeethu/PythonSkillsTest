@@ -8,6 +8,7 @@ import user
 def build_routes():
     server.add_route('get', '/login', login)
     server.add_route('post', '/login_success', login_success)
+    server.add_route('get', '/login_success', login_success_get)
     server.add_route('get', '/admin', adminPage)
     server.add_route('get','/questions',questions)
     server.add_route('get', '/add-a-question', admin.add_a_question)
@@ -17,11 +18,35 @@ def build_routes():
     server.add_route('post', '/testPython', user.showQuestionPost)
     
 def login(request, response):
+    session_data = server.get_session(request)
+    if session_data and "user_id" in session_data:
+        with open("./public/html/index.html", "rb") as file_descriptor:
+            res = file_descriptor.read()
+        return server.send_html_handler(request,response, res)
     with open("./public/html/pyExamLogin.html", "rb") as file_descriptor:
             res = file_descriptor.read()
     return server.send_html_handler(request,response, res)
 
+def login_success_get(request, response):
+    print("login_success - User already logged in")
+    session_data = server.get_session(request)
+    if session_data and "user_id" in session_data:
+        with open("./public/html/index.html", "rb") as file_descriptor:
+                res = file_descriptor.read()
+        return server.send_html_handler(request,response, res)
+    else:
+        with open("./public/html/pyExamLogin.html", "rb") as file_descriptor:
+            res = file_descriptor.read()
+        return server.send_html_handler(request,response, res)
+
+
 def login_success(request, response):
+    print("login_success - User already logged in")
+    session_data = server.get_session(request)
+    if session_data and "user_id" in session_data:
+        with open("./public/html/index.html", "rb") as file_descriptor:
+                res = file_descriptor.read()
+        return server.send_html_handler(request,response, res)
     csrf_guid = str(uuid.uuid4())
     account_kit_api_version = 'v1.0'
     app_id = '611513125703977'
@@ -36,6 +61,10 @@ def login_success(request, response):
     print(me_endpoint_url)
     s = requests.get(me_endpoint_url)
     sJson = json.loads(s.text)
+
+    user_id = rJson['id']
+    content = {"user_id":user_id}
+    server.add_session(request, content)
     # print(sJson)
   #   res = """<head>
   # <title>Account Kit Python App</title>

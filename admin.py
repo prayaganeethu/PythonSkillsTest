@@ -44,27 +44,10 @@ def add_a_question_post(request,response):
     print(request['content'])
     print(request)
     db.add_question_pyExam(que)
-    data = """
-<form action='/add-a-question' method='post'>
-    Question:<br>
-    <input type='text' name="quest"><br>
-    Option 1:<br>
-    <input type='text' name="opt1"><br>
-    Option 2:<br>
-    <input type='text' name="opt2"><br>
-    Option 3:<br>
-    <input type='text' name="opt3"><br>
-    Option 4:<br>
-    <input type='text' name="opt4"><br>
-    Answer(Enter the option number):<br>
-    <input type='number' name="ans"><br>
-    Score:<br>
-    <input type='number' name="score"><br>
-    <button type='submit'>Add</button>
-</form>
-<a href='/admin'>Back</a>
-"""
-    return server.send_html_handler(request, response, data)
+    
+    with open("./public/html/pyAddQuestion.html", "r") as file_descriptor:
+        res = file_descriptor.read()
+    return server.send_html_handler(request, response, res)
 
 def formatQuestions(dataItem):
     #print("format")

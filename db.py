@@ -1,5 +1,6 @@
 import sqlite3
 import json
+import server
 
 conn = sqlite3.connect("pythonExamDb.db")
 cursor = conn.cursor()
@@ -22,4 +23,16 @@ def view_questions_pyExam():
 def show_Quest_pyExam():
     my_query = query_db("SELECT * FROM pyQuestionsMCQ ORDER BY RANDOM() LIMIT ?", (3,), one=True)
     return my_query
+
+def track_session(qList, request):
+    session_data = server.get_session(request)
+    print("\n\nsession data : {0}".format(session_data))
+    # l = []
+    # l.append(session_data["user_id"])
+    # l.append(qList)    
+    cursor.execute("INSERT INTO sessionTrack VALUES(?,?)",(session_data["user_id"],str(qList),))
+ 
+def get_qlist(uid):
+    cursor.execute("SELECT Qnos FROM sessionTrack WHERE Uid = ?",str(uid))
+    return list(cursor.fetchone())
 

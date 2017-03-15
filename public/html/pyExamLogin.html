@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="//cdn.muicss.com/mui-0.9.9/css/mui.min.css" rel="stylesheet" type="text/css" /> 
     <!-- <link rel="stylesheet" href="pyExamLogin.css" type="text/css" /> -->
-    <link href="./css/pyExamLogin.css" rel="stylesheet" type="text/css" />
+    <!-- <link href="./css/pyExamLogin.css" rel="stylesheet" type="text/css" /> -->
     <script src="//cdn.muicss.com/mui-0.9.9/js/mui.min.js"></script>
     <!-- HTTPS required. HTTP will give a 403 forbidden response -->
     <script src="https://sdk.accountkit.com/en_US/sdk.js"></script>
@@ -75,6 +75,8 @@
       // Send code to server to exchange for access token
       document.getElementById("code").value = response.code;
       document.getElementById("csrf").value = response.state;
+      console.log(response.code)
+      console.log(response.state)
       document.getElementById("login_success").submit();
     }
     else if (response.status === "NOT_AUTHENTICATED") {
